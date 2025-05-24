@@ -33,7 +33,7 @@ const AdminPage = () => {
           { method: { name: 'MC' }, amount: Number(row.mc) || 0 },
           { method: { name: 'Yape' }, amount: Number(row.yape) || 0 },
           { method: { name: 'Transf' }, amount: Number(row.transf) || 0 },
-        ].filter(p => p.amount > 0);
+        ];
 
         const expenses = row.gasto_monto > 0 ? [
           {
@@ -68,18 +68,33 @@ const AdminPage = () => {
   });
 
   const exportReportsToExcel = () => {
-    const rows = filteredMessages.map((r) => ({
-      Fecha: new Date(r.date).toLocaleString(),
-      Sede: r.location?.name || 'Sin sede',
-      Turno: r.shift,
-      Recepcionista: r.sender,
-      'Notas del turno': r.notes || '',
-      Ingreso: r.payments?.reduce((sum, p) => sum + (p.amount || 0), 0),
-      Gasto: r.expenses?.reduce((sum, e) => sum + (e.amount || 0), 0),
-      Neto:
-        r.payments?.reduce((sum, p) => sum + (p.amount || 0), 0) -
-        r.expenses?.reduce((sum, e) => sum + (e.amount || 0), 0),
-    }));
+    const rows = filteredMessages.map((r) => {
+      const efectivo = r.payments.find(p => p.method.name === 'Efectivo')?.amount || 0;
+      const visa = r.payments.find(p => p.method.name === 'Visa')?.amount || 0;
+      const mc = r.payments.find(p => p.method.name === 'MC')?.amount || 0;
+      const yape = r.payments.find(p => p.method.name === 'Yape')?.amount || 0;
+      const transf = r.payments.find(p => p.method.name === 'Transf')?.amount || 0;
+      const totalPagos = efectivo + visa + mc + yape + transf;
+      const gasto = r.expenses[0] || {};
+
+      return {
+        Fecha: new Date(r.date).toLocaleString(),
+        Sede: r.location?.name || 'Sin sede',
+        Turno: r.shift,
+        Recepcionista: r.sender,
+        Notas: r.notes || '',
+        Efectivo: efectivo,
+        Visa: visa,
+        MC: mc,
+        Yape: yape,
+        Transf: transf,
+        'Total Pagos': totalPagos,
+        'Tipo Gasto': gasto.type?.name || '',
+        'Monto Gasto': gasto.amount || 0,
+        'Descripción Gasto': gasto.description || '',
+        Neto: totalPagos - (gasto.amount || 0)
+      };
+    });
 
     const worksheet = XLSX.utils.json_to_sheet(rows);
     const workbook = XLSX.utils.book_new();
