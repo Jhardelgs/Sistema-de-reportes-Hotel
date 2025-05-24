@@ -45,7 +45,7 @@ const ReceptionistView = ({ onSendReport }) => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    
+
     const location = locations.find(l => l.id === Number(selectedLocation));
     const payments = paymentMethods
       .filter(method => paymentValues[method.id] && paymentValues[method.id] > 0)
@@ -53,7 +53,7 @@ const ReceptionistView = ({ onSendReport }) => {
         method,
         amount: Number(paymentValues[method.id])
       }));
-    
+
     const expenses = [];
     if (expenseAmount && expenseAmount > 0) {
       const expenseType = expenseTypes.find(et => et.id === Number(selectedExpenseType));
@@ -65,7 +65,7 @@ const ReceptionistView = ({ onSendReport }) => {
     }
 
     if (payments.length === 0 || !sender) return;
-    
+
     const newReport = {
       location,
       payments,
@@ -92,16 +92,15 @@ const ReceptionistView = ({ onSendReport }) => {
       notas: newReport.notes,
       fecha: new Date().toISOString()
     });
-    
-      setSuccessMessage('REPORTE ENVIADO CORRECTAMENTE');
 
-      setTimeout(() => {
+    setSuccessMessage('REPORTE ENVIADO CORRECTAMENTE');
+
+    setTimeout(() => {
       setSuccessMessage('');
       handleClearForm();
       onSendReport(newReport);
-      }, 2000);
-
-    };
+    }, 2000);
+  };
 
   const hasPayments = Object.values(paymentValues).some(val => val && val > 0);
 
@@ -109,11 +108,6 @@ const ReceptionistView = ({ onSendReport }) => {
     <div className="bg-white p-6 rounded-xl shadow-sm">
       <div className="mb-6 text-center">
         <h1 className="text-2xl font-bold text-gray-800">REGISTRO DE TURNO</h1>
-        {successMessage && (
-          <div className="mt-2 p-2 bg-green-100 text-green-800 rounded-lg font-medium">
-            {successMessage}
-          </div>
-        )}
       </div>
 
       <form onSubmit={handleSubmit} className="space-y-4">
@@ -141,7 +135,7 @@ const ReceptionistView = ({ onSendReport }) => {
 
         <div className="space-y-4">
           <h3 className="text-sm font-medium text-gray-700">GASTOS DEL TURNO (OPCIONAL)</h3>
-          
+
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">TIPO DE GASTO</label>
             <select
@@ -232,11 +226,15 @@ const ReceptionistView = ({ onSendReport }) => {
             ENVIAR REPORTE
           </button>
         </div>
+
+        {successMessage && (
+          <div className="mt-4 p-2 bg-green-100 text-green-800 rounded-lg font-medium text-center">
+            {successMessage}
+          </div>
+        )}
       </form>
     </div>
   );
 };
-
-
 
 export default ReceptionistView;
