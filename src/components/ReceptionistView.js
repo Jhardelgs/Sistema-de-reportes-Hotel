@@ -93,14 +93,15 @@ const ReceptionistView = ({ onSendReport }) => {
       fecha: new Date().toISOString()
     });
     
+      setSuccessMessage('REPORTE ENVIADO CORRECTAMENTE');
 
-    onSendReport(newReport);
-    setSuccessMessage('REPORTE ENVIADO CORRECTAMENTE');
-
-    setTimeout(() => {
+      setTimeout(() => {
       setSuccessMessage('');
-      handleClearForm(); 
+      handleClearForm();
+      onSendReport(newReport);
       }, 2000);
+
+    };
 
   const hasPayments = Object.values(paymentValues).some(val => val && val > 0);
 
@@ -234,8 +235,8 @@ const ReceptionistView = ({ onSendReport }) => {
       </form>
     </div>
   );
-  
 };
 
+
+
 export default ReceptionistView;
-// DONE

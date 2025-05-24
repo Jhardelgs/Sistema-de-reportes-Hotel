@@ -1,7 +1,7 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react'; 
 import mockMessages from './mock/messages';
 import ReceptionistView from './components/ReceptionistView';
-import AdminView from './components/AdminView';
+import AdminPage from './components/AdminPage';
 import AuthModal from './components/AuthModal';
 
 const App = () => {
@@ -46,11 +46,11 @@ const App = () => {
     const locationMatch = selectedLocation === 'TODAS' 
       ? true 
       : msg.location?.name === selectedLocation;
-    
+
     const dateMatch = !dateFilter 
       ? true 
       : new Date(msg.date).toLocaleDateString() === new Date(dateFilter).toLocaleDateString();
-    
+
     return locationMatch && dateMatch;
   });
 
@@ -84,7 +84,7 @@ const App = () => {
   return (
     <div className="min-h-screen">
       {view === 'home' && <HomeScreen />}
-      
+
       {view === 'receptionist' && (
         <div className="min-h-screen bg-gray-50 py-8 px-4">
           <div className="max-w-md mx-auto">
@@ -104,7 +104,7 @@ const App = () => {
           <div className="max-w-6xl mx-auto">
             <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 gap-4">
               <h1 className="text-3xl font-bold text-gray-800">PANEL ADMINISTRADOR</h1>
-              
+
               <div className="flex flex-col md:flex-row gap-3">
                 <select
                   value={selectedLocation}
@@ -137,7 +137,7 @@ const App = () => {
                 </button>
               </div>
             </div>
-            <AdminView messages={filteredMessages} />
+            <AdminPage />
           </div>
         </div>
       )}
